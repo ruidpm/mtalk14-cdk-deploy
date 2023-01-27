@@ -19,7 +19,7 @@ const todoTable = new Table(MTalk14Stack, "todo-table", {
   removalPolicy: RemovalPolicy.DESTROY,
   partitionKey: {
     type: AttributeType.STRING,
-    name: "atodo",
+    name: "todo",
   },
 });
 
