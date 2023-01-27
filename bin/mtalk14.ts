@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { App, CfnOutput, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { App, CfnOutput, Duration, RemovalPolicy, Stack } from "aws-cdk-lib";
 import {
   AwsIntegration,
   PassthroughBehavior,
@@ -7,6 +7,10 @@ import {
 } from "aws-cdk-lib/aws-apigateway";
 import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
+import { Runtime, StartingPosition } from "aws-cdk-lib/aws-lambda";
+import { DynamoEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
+import path = require("path");
 
 import "source-map-support/register";
 
@@ -69,3 +73,20 @@ const todoResource = todoApi.root.addResource("todo");
 todoResource.addMethod("POST", dynamoPutIntegration, {
   methodResponses: [{ statusCode: "200" }],
 });
+
+const todoLambda = new NodejsFunction(MTalk14Stack, "todoLambda", {
+  runtime: Runtime.NODEJS_18_X,
+  handler: "todoLambdaHandler",
+  entry: path.join(__dirname, "../src/todoLambdaHandler.ts"),
+  timeout: Duration.seconds(30),
+  memorySize: 128,
+  bundling: {
+    minify: true,
+  },
+});
+
+todoLambda.addEventSource(
+  new DynamoEventSource(todoTable, {
+    startingPosition: StartingPosition.LATEST,
+  })
+);
