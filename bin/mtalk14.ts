@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { App, RemovalPolicy, Stack } from "aws-cdk-lib";
+import { App, CfnOutput, RemovalPolicy, Stack } from "aws-cdk-lib";
 import {
   AwsIntegration,
   PassthroughBehavior,
@@ -60,4 +60,12 @@ const dynamoPutIntegration = new AwsIntegration({
       },
     ],
   },
+});
+
+new CfnOutput(MTalk14Stack, "apiOutput", { value: todoApi.url });
+
+const todoResource = todoApi.root.addResource("todo");
+
+todoResource.addMethod("POST", dynamoPutIntegration, {
+  methodResponses: [{ statusCode: "200" }],
 });
