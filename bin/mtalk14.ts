@@ -5,7 +5,7 @@ import {
   PassthroughBehavior,
   RestApi,
 } from "aws-cdk-lib/aws-apigateway";
-import { AttributeType, Table } from "aws-cdk-lib/aws-dynamodb";
+import { AttributeType, StreamViewType, Table } from "aws-cdk-lib/aws-dynamodb";
 import { Role, ServicePrincipal } from "aws-cdk-lib/aws-iam";
 import { Runtime, StartingPosition } from "aws-cdk-lib/aws-lambda";
 import { DynamoEventSource } from "aws-cdk-lib/aws-lambda-event-sources";
@@ -25,6 +25,7 @@ const todoTable = new Table(MTalk14Stack, "todo-table", {
     type: AttributeType.STRING,
     name: "todo",
   },
+  stream: StreamViewType.NEW_IMAGE,
 });
 
 const todoApi = new RestApi(MTalk14Stack, "todo-api", {
