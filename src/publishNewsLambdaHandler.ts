@@ -6,7 +6,9 @@ type PublishNews = {
 };
 
 export const publishNewsLambdaHandler = async (event: APIGatewayEvent) => {
-  const body = event.body as unknown as PublishNews;
+  let body: PublishNews = { message: "oops" };
+  if (event.body) body = JSON.parse(event.body);
+
   const topicArn = process.env.NEWS_TOPIC as string;
 
   const params = {

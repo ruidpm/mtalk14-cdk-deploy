@@ -2,7 +2,12 @@ import { APIGatewayEvent } from "aws-lambda";
 import { SNS } from "aws-sdk";
 
 export const addSubscriptionLambdaHandler = async (event: APIGatewayEvent) => {
-  const body = event.body;
+  let body;
+
+  if (event.body) {
+    body = JSON.parse(event.body);
+  }
+
   const topicArn = process.env.NEWS_TOPIC as string;
 
   const params = {
