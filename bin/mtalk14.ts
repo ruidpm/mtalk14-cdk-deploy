@@ -35,6 +35,26 @@ const addSubscriptionLambda = new NodejsFunction(
   }
 );
 
-const resource = api.root.addResource("news");
+const publishNewsLambda = new NodejsFunction(
+  topicNotificationsStack,
+  "publishNewsLambda",
+  {
+    runtime: Runtime.NODEJS_18_X,
+    timeout: Duration.seconds(30),
+    memorySize: 128,
+    bundling: {
+      minify: true,
+    },
+    handler: "publishNewsLambdaHandler",
+    entry: path.join(__dirname, "../src/publishNewsLambdaHandler.ts"),
+    environment: {
+      NEWS_TOPIC: newsTopic.topicArn,
+    },
+  }
+);
 
-resource.addMethod("POST", new LambdaIntegration(addSubscriptionLambda));
+const newsResource = api.root.addResource("news");
+const publishResource = api.root.addResource("publish");
+
+newsResource.addMethod("POST", new LambdaIntegration(addSubscriptionLambda));
+publishResource.addMethod("POST", new LambdaIntegration(publishNewsLambda));
