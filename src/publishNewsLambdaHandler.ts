@@ -20,5 +20,5 @@ export const publishNewsLambdaHandler = async (event: APIGatewayEvent) => {
   const sns = new SNS();
   await sns.publish(params).promise();
 
-  return JSON.stringify({ body: "Published" });
+  return "great success";
 };

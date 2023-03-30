@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { App, Duration, Stack } from "aws-cdk-lib";
 import { LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
+import { PolicyStatement } from "aws-cdk-lib/aws-iam";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Topic } from "aws-cdk-lib/aws-sns";
@@ -34,6 +35,12 @@ const addSubscriptionLambda = new NodejsFunction(
     },
   }
 );
+
+const policy: PolicyStatement = new PolicyStatement({
+  actions: ["sns:Subscribe"],
+  resources: [newsTopic.topicArn],
+});
+addSubscriptionLambda.addToRolePolicy(policy);
 
 const publishNewsLambda = new NodejsFunction(
   topicNotificationsStack,
