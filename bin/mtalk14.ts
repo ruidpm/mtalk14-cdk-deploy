@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { App, Duration, Stack } from "aws-cdk-lib";
-import { RestApi } from "aws-cdk-lib/aws-apigateway";
+import { LambdaIntegration, RestApi } from "aws-cdk-lib/aws-apigateway";
 import { Runtime } from "aws-cdk-lib/aws-lambda";
 import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Topic } from "aws-cdk-lib/aws-sns";
@@ -35,4 +35,6 @@ const addSubscriptionLambda = new NodejsFunction(
   }
 );
 
-const resource = api.root.addMethod("POST");
+const resource = api.root.addResource("news");
+
+resource.addMethod("POST", new LambdaIntegration(addSubscriptionLambda));
