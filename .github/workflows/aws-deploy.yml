@@ -20,8 +20,8 @@ jobs:
           aws-region: "eu-west-1"
       - name: Install dependencies
         run: yarn
-      - name: Bootstrap
-        run: yarn cdk bootstrap
+      # - name: Bootstrap
+      #   run: yarn cdk bootstrap
       - name: Synth stack
         run: yarn cdk synth
       - name: Deploy stack

@@ -53,6 +53,8 @@ const publishNewsLambda = new NodejsFunction(
   }
 );
 
+newsTopic.grantPublish(publishNewsLambda);
+
 const newsResource = api.root.addResource("news");
 const publishResource = api.root.addResource("publish");
 
