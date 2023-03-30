@@ -1,5 +1,8 @@
 #!/usr/bin/env node
-import { App, Stack } from "aws-cdk-lib";
+import { App, Duration, Stack } from "aws-cdk-lib";
+import { RestApi } from "aws-cdk-lib/aws-apigateway";
+import { Runtime } from "aws-cdk-lib/aws-lambda";
+import { NodejsFunction } from "aws-cdk-lib/aws-lambda-nodejs";
 import { Topic } from "aws-cdk-lib/aws-sns";
 
 import path = require("path");
@@ -11,3 +14,25 @@ const topicNotificationsStack = new Stack(app, "NotificationsStack");
 const newsTopic = new Topic(topicNotificationsStack, "NewsTopic", {
   topicName: "NewsTopic",
 });
+
+const api = new RestApi(topicNotificationsStack, "NewsApi");
+
+const addSubscriptionLambda = new NodejsFunction(
+  topicNotificationsStack,
+  "addSubscriptionLambda",
+  {
+    runtime: Runtime.NODEJS_18_X,
+    timeout: Duration.seconds(30),
+    memorySize: 128,
+    bundling: {
+      minify: true,
+    },
+    handler: "addSubscriptionLambdaHandler",
+    entry: path.join(__dirname, "../src/addSubscriptionLambdaHandler.ts"),
+    environment: {
+      NEWS_TOPIC: newsTopic.topicArn,
+    },
+  }
+);
+
+const resource = api.root.addMethod("POST");
