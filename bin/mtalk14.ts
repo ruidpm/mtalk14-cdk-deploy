@@ -23,7 +23,7 @@ const addSubscriptionLambda = new NodejsFunction(
   {
     runtime: Runtime.NODEJS_18_X,
     timeout: Duration.seconds(30),
-    memorySize: 128,
+    memorySize: 512,
     bundling: {
       minify: true,
     },
@@ -41,7 +41,7 @@ const publishNewsLambda = new NodejsFunction(
   {
     runtime: Runtime.NODEJS_18_X,
     timeout: Duration.seconds(30),
-    memorySize: 128,
+    memorySize: 512,
     bundling: {
       minify: true,
     },

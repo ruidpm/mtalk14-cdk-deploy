@@ -14,4 +14,6 @@ export const addSubscriptionLambdaHandler = async (event: APIGatewayEvent) => {
 
   const sns = new SNS();
   await sns.subscribe(params).promise();
+
+  return JSON.stringify({ body: "Added" });
 };
