@@ -5,7 +5,7 @@ type PublishNews = {
   message: string;
 };
 
-export const addSubscriptionLambdaHandler = async (event: APIGatewayEvent) => {
+export const publishNewsLambdaHandler = async (event: APIGatewayEvent) => {
   const body = event.body as unknown as PublishNews;
   const topicArn = process.env.NEWS_TOPIC as string;
 
