@@ -12,8 +12,9 @@ export const publishNewsLambdaHandler = async (event: APIGatewayEvent) => {
   const params = {
     TopicArn: topicArn,
     Message: body.message,
+    Subject: "School News",
   };
-
+  console.log(JSON.stringify(params));
   const sns = new SNS();
   await sns.publish(params).promise();
 
