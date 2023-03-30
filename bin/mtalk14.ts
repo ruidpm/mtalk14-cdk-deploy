@@ -35,16 +35,6 @@ const addSubscriptionLambda = new NodejsFunction(
   }
 );
 
-addSubscriptionLambda.addPermission({
-  Statement: [
-    {
-      Effect: "Allow",
-      Action: ["sns:Publish", "sns:Subscribe"],
-      Resource: "arn:aws:sns:your_region:123456789012:YourTopicName",
-    },
-  ],
-});
-
 const publishNewsLambda = new NodejsFunction(
   topicNotificationsStack,
   "publishNewsLambda",
